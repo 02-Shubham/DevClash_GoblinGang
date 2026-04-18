@@ -17,7 +17,7 @@ const getPriceTool = tool(
         status: "success",
         coin: coinId,
         priceUsd: price,
-        message: `The current price of ${coinId} is $${price} USD.`,
+        message: `The current price of ${coinId} is $${price.toLocaleString()} USD.`,
       });
     } catch (error) {
       return JSON.stringify({ status: "error", message: error.message });
@@ -26,14 +26,14 @@ const getPriceTool = tool(
   {
     name: "get_crypto_price",
     description:
-      "Fetches the current USD price of a cryptocurrency. " +
-      "Use when the user asks 'what is the price of ETH', 'how much is BTC', etc. " +
-      "coinId should be the CoinGecko ID (e.g. 'ethereum', 'bitcoin', 'usd-coin').",
+      "Fetches the current USD price of a cryptocurrency using the Binance public API (no key required). " +
+      "Use when the user asks 'what is the price of ETH', 'how much is BTC', 'ETH price', etc. " +
+      "coinId should be the token symbol (e.g. 'ETH', 'BTC', 'SOL', 'USDC', 'MATIC').",
     schema: z.object({
       coinId: z
         .string()
         .describe(
-          "The CoinGecko coin ID to look up (e.g. 'ethereum', 'bitcoin', 'usd-coin', 'tether')"
+          "The cryptocurrency symbol to look up (e.g. 'ETH', 'BTC', 'SOL', 'LINK', 'UNI')"
         ),
     }),
   }
