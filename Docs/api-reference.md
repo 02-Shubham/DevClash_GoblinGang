@@ -1,14 +1,29 @@
 # 📡 API Reference
 
-Base URL: `/api/v1`
+Base URL: `http://localhost:5000` (Current) / `/api/v1` (Versioned)
 
-All endpoints require authentication via JWT (obtained through SIWE login) unless marked as `Public`.
+All endpoints require authentication:
+- **Immediate:** Firebase ID Token (`Authorization: Bearer <ID_TOKEN>`)
+- **Planned/Legacy:** JWT (obtained through SIWE)
 
 ---
 
 ## Authentication
 
-### `POST /auth/nonce`
+### `POST /auth/register` (Current)
+Ensures the authenticated user exists in the Firestore `users` collection. Automatically called by frontend on successful Firebase login.
+
+**Access:** Authenticated (Firebase)
+
+**Response:** `200 OK`
+```json
+{
+  "message": "User registered successfully",
+  "user": { "uid": "...", "email": "..." }
+}
+```
+
+### `POST /auth/nonce` (Alternative)
 Get a nonce for SIWE message signing.
 
 **Access:** Public
