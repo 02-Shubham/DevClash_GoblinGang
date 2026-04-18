@@ -68,8 +68,8 @@ const createAgent = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("createAgent error:", error);
-    res.status(500).json({ error: "Failed to create agent: " + error.message });
+    console.error("❌ createAgent error detail:", error);
+    return res.status(500).json({ error: error.message || "Failed to create agent" });
   }
 };
 
@@ -84,13 +84,15 @@ const getAgents = async (req, res) => {
     const snapshot = await db
       .collection("agents")
       .where("userId", "==", uid)
-      .orderBy("createdAt", "desc")
       .get();
 
     const agents = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Sort in-memory to avoid requiring a composite index
+    agents.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return res.status(200).json({ agents });
   } catch (error) {
