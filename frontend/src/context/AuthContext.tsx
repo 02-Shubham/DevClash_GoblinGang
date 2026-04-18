@@ -62,8 +62,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               Authorization: `Bearer ${token}`,
             },
           });
-        } catch (err) {
-          console.error("Auto-register failed:", err);
+        } catch (err: any) {
+          // If the backend is down, we don't want to crash the frontend or spam logs
+          if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+            console.warn("Backend server not reached for auto-registration (likely offline).");
+          } else {
+            console.error("Auto-register failed:", err);
+          }
         }
       }
     });

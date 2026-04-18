@@ -3,9 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Sparkles, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PromptInputBox } from "@/components/ui/ai-prompt-box";
-import { chatApi } from "@/lib/api";
-import { useWallet } from "@/hooks/useWallet";
 
 interface Message {
   role: "user" | "assistant";
@@ -18,66 +15,36 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I'm your autonomous agent assistant. Tell me what you'd like to automate on-chain. For example: 'If ETH drops 5%, buy $50'." }
   ]);
-  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { sendTransaction } = useWallet();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isAiLoading]);
+  }, [messages]);
 
-  const handleSend = async (input: string, files?: File[]) => {
-    if (!input.trim() && (!files || files.length === 0)) return;
+  const handleSend = () => {
+    if (!input.trim()) return;
 
-    // 1. ADD USER MESSAGE
     const userMessage: Message = { role: "user", content: input };
     setMessages(prev => [...prev, userMessage]);
-    
-    // 2. SET LOADING
-    setIsAiLoading(true);
+    setInput("");
 
-    try {
-      // 3. API CALL & PARSE RESPONSE
-      const chatHistory = messages.map(m => ({ role: m.role, content: m.content }));
-      const { response, transactionData } = await chatApi.send(input, chatHistory);
-
-      // 4. DISPLAY RESPONSE
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: response || "I've processed your request.",
+    // Simulate AI response
+    setTimeout(() => {
+      const assistantMessage: Message = { 
+        role: "assistant", 
+        content: "I've parsed your intent. I'm creating an agent with these parameters:",
+        type: "agent-card",
+        metadata: {
+          condition: input.toLowerCase().includes("eth") ? "ETH drops 5%" : "Custom Condition",
+          action: "Buy $50",
+          status: "active"
+        }
       };
       setMessages(prev => [...prev, assistantMessage]);
-
-      // 5. HANDLE TRANSACTION
-      if (transactionData) {
-        try {
-          const txHash = await sendTransaction(transactionData as object);
-          if (txHash) {
-            setMessages(prev => [...prev, { 
-              role: "assistant", 
-              content: `Transaction signed and executed successfully!\nHash: ${txHash}` 
-            }]);
-          }
-        } catch (txError: any) {
-          console.error("Transaction Error:", txError);
-          setMessages(prev => [...prev, { 
-            role: "assistant", 
-            content: `Transaction failed or was rejected: ${txError.message || txError}` 
-          }]);
-        }
-      }
-    } catch (apiError: any) {
-      console.error("Chat API Error:", apiError);
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: `Error connecting to AI: ${apiError.message || "Something went wrong."}` 
-      }]);
-    } finally {
-      // 6. FINALLY
-      setIsAiLoading(false);
-    }
+    }, 1000);
   };
 
   return (

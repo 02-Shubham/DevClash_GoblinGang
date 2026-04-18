@@ -18,14 +18,18 @@ const getLogs = async (req, res) => {
     const snapshot = await db
       .collection("executionLogs")
       .where("userId", "==", uid)
-      .orderBy("triggeredAt", "desc")
-      .limit(limit)
       .get();
 
-    const logs = snapshot.docs.map((doc) => ({
+    let logs = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Sort in memory to avoid indexing errors
+    logs.sort((a, b) => new Date(b.triggeredAt).getTime() - new Date(a.triggeredAt).getTime());
+    
+    // Apply limit manually
+    logs = logs.slice(0, limit);
 
     return res.status(200).json({ logs });
   } catch (error) {

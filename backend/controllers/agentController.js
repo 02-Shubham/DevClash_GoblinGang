@@ -31,18 +31,18 @@ const createAgent = async (req, res) => {
     // 2. Validate parsed intent
     const validation = validationService.validateIntent(parsedIntent);
     if (!validation.valid) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        error: validation.error 
+        error: validation.error
       });
     }
 
     // 3. Apply permissions check
     const maxSpend = permissions?.maxSpend || 0;
     if (parsedIntent.action.amount > maxSpend && maxSpend > 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        error: `Action amount (${parsedIntent.action.amount}) exceeds max spend limit (${maxSpend}).` 
+        error: `Action amount (${parsedIntent.action.amount}) exceeds max spend limit (${maxSpend}).`
       });
     }
 
@@ -68,8 +68,8 @@ const createAgent = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("createAgent error:", error);
-    res.status(500).json({ error: "Failed to create agent: " + error.message });
+    console.error("❌ createAgent error detail:", error);
+    return res.status(500).json({ error: error.message || "Failed to create agent" });
   }
 };
 
@@ -84,7 +84,6 @@ const getAgents = async (req, res) => {
     const snapshot = await db
       .collection("agents")
       .where("userId", "==", uid)
-      .orderBy("createdAt", "desc")
       .get();
 
     const agents = snapshot.docs.map((doc) => ({
