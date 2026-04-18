@@ -84,13 +84,15 @@ const getAgents = async (req, res) => {
     const snapshot = await db
       .collection("agents")
       .where("userId", "==", uid)
-      .orderBy("createdAt", "desc")
       .get();
 
     const agents = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    // Sort in memory to avoid index requirements
+    agents.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return res.status(200).json({ agents });
   } catch (error) {
