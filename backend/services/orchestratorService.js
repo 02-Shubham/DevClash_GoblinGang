@@ -11,9 +11,9 @@
  */
 
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-const { createReactAgent } = require("langchain/agents");
+const { createToolCallingAgent } = require("langchain/agents");
 const { AgentExecutor } = require("langchain/agents");
-const { ChatPromptTemplate } = require("@langchain/core/prompts");
+const { ChatPromptTemplate, MessagesPlaceholder } = require("@langchain/core/prompts");
 
 // Import all registered tools
 const { transferTool, swapTool, checkBalanceTool } = require("../tools/blockchainTools");
@@ -26,22 +26,17 @@ const { getPriceTool } = require("../tools/priceTools");
 const SYSTEM_PROMPT = `You are Nexus, an intelligent on-chain AI agent assistant.
 You help users manage their crypto wallet and automate blockchain tasks.
 
-You have access to the following tools:
-- transfer_eth: To send ETH to another address immediately
-- swap_tokens: To swap tokens immediately
-- check_balance: To check wallet ETH balance
-- get_crypto_price: To get current prices from CoinGecko
-- create_scheduled_agent: To schedule a recurring or conditional task (e.g., "buy ETH daily", "sell if price drops")
-- list_agents: To list the user's existing autonomous agents
-- toggle_agent: To enable or disable an existing agent
+You have access to tools that can:
+- Transfer ETH
+- Swap tokens
+- Check balances and crypto prices
+- Create autonomous "Scheduled Agents" for recurring or conditional tasks
 
 IMPORTANT RULES:
-1. If the user wants to do something NOW (send, swap), use the immediate transaction tools.
-2. If the user wants to do something RECURRING or CONDITIONAL (e.g., "every day", "when price hits X"), use create_scheduled_agent.
-3. Always confirm the action with a human-readable message.
-4. If you need to create an agent, the userId is always available in the context as {userId}.
-5. If the user's wallet address is needed, use {walletAddress}.
-6. Be concise, friendly, and clear.
+1. If the user wants to do something NOW, use the immediate tools.
+2. If the user wants to do something RECURRING or CONDITIONAL, use create_scheduled_agent.
+3. Always confirm actions.
+4. User context is provided. Use {userId} and {walletAddress} when needed.
 
 Current user context:
 - User ID: {userId}
@@ -74,25 +69,30 @@ const getOrchestrator = async () => {
     temperature: 0,
   });
 
-  // Bind tools to the LLM
-  const llmWithTools = llm.bindTools(ALL_TOOLS);
+  // Create prompt correctly for ToolCallingAgent
+  const prompt = ChatPromptTemplate.fromMessages([
+    ["system", SYSTEM_PROMPT],
+    new MessagesPlaceholder("chat_history"),
+    ["human", "{input}"],
+    new MessagesPlaceholder("agent_scratchpad"),
+  ]);
 
-  // Create the ReAct-style agent
-  const agent = await createReactAgent({
-    llm: llmWithTools,
+  // Create the Tool Calling agent
+  const agent = await createToolCallingAgent({
+    llm,
     tools: ALL_TOOLS,
-    messageModifier: SYSTEM_PROMPT,
+    prompt,
   });
 
   orchestratorExecutor = new AgentExecutor({
     agent,
     tools: ALL_TOOLS,
     verbose: process.env.NODE_ENV === "development",
-    maxIterations: 5,
     handleParsingErrors: true,
+    returnIntermediateSteps: true,
   });
 
-  console.log("✅ Orchestrator (Nexus) initialized");
+  console.log("✅ Orchestrator (Nexus) initialized with Tool Calling");
   return orchestratorExecutor;
 };
 

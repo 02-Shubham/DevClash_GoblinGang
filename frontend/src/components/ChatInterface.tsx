@@ -2,7 +2,9 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Sparkles, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
+import { useAuth } from "../context/AuthContext";
+import { useWallet } from "../hooks/useWallet";
 
 interface Message {
   role: "user" | "assistant";
@@ -12,6 +14,8 @@ interface Message {
 }
 
 export function ChatInterface() {
+  const { user } = useAuth();
+  const { sendTransaction } = useWallet();
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hello! I'm your autonomous agent assistant. Tell me what you'd like to automate on-chain. For example: 'If ETH drops 5%, buy $50'." }
   ]);
@@ -24,27 +28,86 @@ export function ChatInterface() {
     }
   }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || !user) return;
 
-    const userMessage: Message = { role: "user", content: input };
+    const userInput = input;
+    const userMessage: Message = { role: "user", content: userInput };
     setMessages(prev => [...prev, userMessage]);
     setInput("");
 
-    // Simulate AI response
-    setTimeout(() => {
-      const assistantMessage: Message = { 
-        role: "assistant", 
-        content: "I've parsed your intent. I'm creating an agent with these parameters:",
-        type: "agent-card",
-        metadata: {
-          condition: input.toLowerCase().includes("eth") ? "ETH drops 5%" : "Custom Condition",
-          action: "Buy $50",
-          status: "active"
+    // Temporary loading state if desired (optional)
+    const loadingMessage: Message = { role: "assistant", content: "Thinking..." };
+    setMessages(prev => [...prev, loadingMessage]);
+
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: userInput })
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to get response from Nexus Orchestrator.");
+      }
+
+      const data = await res.json();
+      
+      // Replace 'Thinking...' with actual response
+      setMessages(prev => {
+        const withoutLoading = prev.slice(0, -1);
+        const assistantMessage: Message = { 
+          role: "assistant", 
+          content: data.response
+        };
+
+        // If there's an agent card returned in data, we can optionally parse it
+        // Or if there's a transaction, prompt signing
+        let transactionMessage: Message | undefined;
+        if (data.transactionData) {
+          transactionMessage = {
+            role: "assistant",
+            content: "Transaction prepared by Orchestrator. Please review and sign in MetaMask.",
+            type: "agent-card", // Reusing this UI block for tx prompt
+            metadata: {
+              condition: "Immediate Execution",
+              action: `Target: ${data.transactionData.to}`,
+            }
+          };
         }
-      };
-      setMessages(prev => [...prev, assistantMessage]);
-    }, 1000);
+
+        if (transactionMessage) {
+           return [...withoutLoading, assistantMessage, transactionMessage];
+        }
+        return [...withoutLoading, assistantMessage];
+      });
+
+      // Handle raw transaction if Orchestrator prepared one (e.g., Transfer/Swap)
+      if (data.transactionData) {
+        try {
+          const txHash = await sendTransaction(data.transactionData);
+          setMessages(prev => [...prev, {
+            role: "assistant",
+            content: `Transaction successfully submitted to blockchain! TX Hash: ${txHash}`
+          }]);
+        } catch (txError: any) {
+          setMessages(prev => [...prev, {
+            role: "assistant",
+            content: `Transaction failed or rejected: ${txError.message}`
+          }]);
+        }
+      }
+
+    } catch (error: any) {
+      setMessages(prev => {
+        const withoutLoading = prev.slice(0, -1);
+        return [...withoutLoading, { role: "assistant", content: `Error: ${error.message}` }];
+      });
+    }
   };
 
   return (
