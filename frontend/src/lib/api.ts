@@ -46,13 +46,13 @@ async function apiFetch<T = unknown>(
 // Auth
 // ----------------------------------------------------------------
 export const authApi = {
-  register: () => apiFetch("/auth/register", { method: "POST" }),
+  register: () => apiFetch("/api/auth/register", { method: "POST" }),
   linkWallet: (walletAddress: string) =>
-    apiFetch("/auth/link-wallet", {
+    apiFetch("/api/auth/link-wallet", {
       method: "POST",
       body: JSON.stringify({ walletAddress }),
     }),
-  getProfile: () => apiFetch("/auth/profile"),
+  getProfile: () => apiFetch("/api/auth/profile"),
 };
 
 // ----------------------------------------------------------------
@@ -60,32 +60,32 @@ export const authApi = {
 // ----------------------------------------------------------------
 export const chatApi = {
   send: (message: string, chatHistory: Array<{ role: string; content: string }> = []) =>
-    apiFetch<{ response: string; transactionData: unknown | null }>("/chat", {
+    apiFetch<{ response: string; transactionData: unknown | null }>("/api/chat", {
       method: "POST",
       body: JSON.stringify({ message, chatHistory }),
     }),
   getHistory: (limit = 20) =>
-    apiFetch<{ messages: Array<Record<string, unknown>> }>(`/chat/history?limit=${limit}`),
+    apiFetch<{ messages: Array<Record<string, unknown>> }>(`/api/chat/history?limit=${limit}`),
 };
 
 // ----------------------------------------------------------------
 // Agents
 // ----------------------------------------------------------------
 export const agentApi = {
-  create: (intentText: string) =>
-    apiFetch<{ message: string; intent: string }>("/agents/create", {
+  create: (data: { name: string; intent: string; wallet: string; permissions: { maxSpend: number } }) =>
+    apiFetch<{ success: boolean; agent: any }>("/api/agent/create", {
       method: "POST",
-      body: JSON.stringify({ intentText }),
+      body: JSON.stringify(data),
     }),
   list: () =>
-    apiFetch<{ agents: Array<Record<string, unknown>> }>("/agents"),
+    apiFetch<{ agents: Array<Record<string, unknown>> }>("/api/agent"),
   toggle: (agentId: string, status: "active" | "paused") =>
-    apiFetch(`/agents/${agentId}/toggle`, {
+    apiFetch(`/api/agent/${agentId}/toggle`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
     }),
   delete: (agentId: string) =>
-    apiFetch(`/agents/${agentId}`, { method: "DELETE" }),
+    apiFetch(`/api/agent/${agentId}`, { method: "DELETE" }),
 };
 
 // ----------------------------------------------------------------
@@ -93,14 +93,14 @@ export const agentApi = {
 // ----------------------------------------------------------------
 export const logApi = {
   getAll: (limit = 20) =>
-    apiFetch<{ logs: Array<Record<string, unknown>> }>(`/logs?limit=${limit}`),
+    apiFetch<{ logs: Array<Record<string, unknown>> }>(`/api/logs?limit=${limit}`),
   getPending: () =>
-    apiFetch<{ pendingTransactions: Array<Record<string, unknown>> }>("/logs/pending"),
+    apiFetch<{ pendingTransactions: Array<Record<string, unknown>> }>("/api/logs/pending"),
   confirm: (logId: string, txHash: string) =>
-    apiFetch(`/logs/${logId}/confirm`, {
+    apiFetch(`/api/logs/${logId}/confirm`, {
       method: "PATCH",
       body: JSON.stringify({ txHash }),
     }),
   reject: (logId: string) =>
-    apiFetch(`/logs/${logId}/reject`, { method: "PATCH" }),
+    apiFetch(`/api/logs/${logId}/reject`, { method: "PATCH" }),
 };
