@@ -11,7 +11,17 @@ import {
   Settings,
   Send,
   MessageCircle,
-  Smartphone
+  Smartphone,
+  Search,
+  Link2,
+  Database,
+  ListTodo,
+  CalendarDays,
+  GitBranch,
+  Mail,
+  Calendar,
+  FileText,
+  HardDrive
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -83,7 +93,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           {/* Dynamic Views */}
           <div className="p-8 flex-1 overflow-y-auto">
             {activeTab === "Channels" && <ChannelsView />}
-            {activeTab === "Integrations" && <PlaceholderView title="Integrations" desc="Connect other apps like Google Drive, Meet, Calendar, Slack, etc." />}
+            {activeTab === "Integrations" && <IntegrationsView />}
             {activeTab === "Memory" && <PlaceholderView title="Memory" desc="User preferences and persistent agent memory state." />}
             {activeTab === "Skills" && <PlaceholderView title="Skills" desc="Explore and acquire skills or agents created by the community." />}
             {activeTab === "Permissions" && <PlaceholderView title="Permissions" desc="Basic access control and data visibility settings." />}
@@ -170,6 +180,100 @@ function PlaceholderView({ title, desc }: { title: string; desc: string }) {
       <p className="text-slate-500 max-w-sm">{desc}</p>
       <div className="mt-8 text-sm font-semibold text-slate-400 bg-white px-4 py-2 rounded-full border border-slate-200">
         Coming Soon
+      </div>
+    </div>
+  );
+}
+
+function IntegrationsView() {
+  const integrations = [
+    {
+      name: "Airtable",
+      desc: "Airtable merges spreadsheet functionality with database power, enabling teams to...",
+      icon: <Database className="w-5 h-5 text-blue-500" />,
+      bg: "bg-blue-50",
+    },
+    {
+      name: "Asana",
+      desc: "Tool to help teams organize, track, and manage their work.",
+      icon: <ListTodo className="w-5 h-5 text-rose-500" />,
+      bg: "bg-rose-50",
+    },
+    {
+      name: "Calendly",
+      desc: "Calendly is an appointment scheduling tool that automates meeting invitations,...",
+      icon: <CalendarDays className="w-5 h-5 text-sky-500" />,
+      bg: "bg-sky-50",
+    },
+    {
+      name: "GitHub",
+      desc: "GitHub is a code hosting platform for version control and collaboration, offeri...",
+      icon: <GitBranch className="w-5 h-5 text-slate-700" />,
+      bg: "bg-slate-100",
+    },
+    {
+      name: "Gmail",
+      desc: "Gmail is Google's email service, featuring spam protection, search functions, and...",
+      icon: <Mail className="w-5 h-5 text-red-500" />,
+      bg: "bg-red-50",
+    },
+    {
+      name: "Google Calendar",
+      desc: "Google Calendar is a time management tool providing scheduling features, even...",
+      icon: <Calendar className="w-5 h-5 text-blue-600" />,
+      bg: "bg-blue-50",
+    },
+    {
+      name: "Google Docs",
+      desc: "Google Docs is a cloud-based word processor with real-time collaboration,...",
+      icon: <FileText className="w-5 h-5 text-blue-500" />,
+      bg: "bg-blue-50",
+    },
+    {
+      name: "Google Drive",
+      desc: "Google Drive is a cloud storage solution for uploading, sharing, and collaboratin...",
+      icon: <HardDrive className="w-5 h-5 text-green-500" />,
+      bg: "bg-green-50",
+    },
+  ];
+
+  return (
+    <div className="flex flex-col h-full space-y-6">
+      {/* Search Bar */}
+      <div className="relative shrink-0">
+        <Search className="w-4 h-4 absolute left-3.5 top-3.5 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Search integrations..."
+          className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 outline-none focus:ring-2 focus:ring-slate-200 transition-all shadow-sm"
+        />
+      </div>
+
+      {/* Integrations Grid */}
+      <div className="grid grid-cols-2 gap-4 pb-8">
+        {integrations.map((item, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4 p-5 bg-white border border-slate-200 rounded-xl hover:shadow-md transition-shadow group"
+          >
+            <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm border border-slate-100", item.bg)}>
+              {item.icon}
+            </div>
+            
+            <div className="flex-1 min-w-0">
+              <h3 className="text-[15px] font-bold text-slate-900 truncate">
+                {item.name}
+              </h3>
+              <p className="text-[13px] text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
+                {item.desc}
+              </p>
+            </div>
+
+            <button className="shrink-0 w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors">
+              <Link2 className="w-4 h-4" />
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
