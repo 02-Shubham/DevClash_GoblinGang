@@ -47,6 +47,22 @@ const chat = async (req, res) => {
     });
   } catch (error) {
     console.error("chat controller error:", error);
+    const message = String(error?.message || "");
+    if (message.includes("429") || message.toLowerCase().includes("quota exceeded")) {
+      return res.status(429).json({
+        error: "AI provider quota exceeded. Update Featherless plan/quota and retry.",
+      });
+    }
+    if (message.includes("401") || message.toLowerCase().includes("api key")) {
+      return res.status(401).json({
+        error: "AI provider authentication failed. Check FEATHERLESS_API_KEY.",
+      });
+    }
+    if (message.includes("404") && message.toLowerCase().includes("models/")) {
+      return res.status(500).json({
+        error: "Configured AI model is unavailable. Update FEATHERLESS_MODEL in backend/.env.",
+      });
+    }
     res.status(500).json({ error: "Orchestrator failed to process request" });
   }
 };
