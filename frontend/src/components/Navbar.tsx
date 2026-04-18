@@ -1,14 +1,17 @@
 "use client";
 
 import React from "react";
-import { Wallet, Globe, User, Bell } from "lucide-react";
+import { Wallet, Globe, Bell, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export function Navbar() {
+  const { user, signOut } = useAuth();
+
   return (
     <div className="h-16 flex items-center justify-between px-8 border-b border-border bg-card/30 backdrop-blur-lg sticky top-0 z-10">
       <div className="flex items-center gap-2">
         <Globe className="w-4 h-4 text-muted-foreground" />
-        <span className="text-sm font-medium text-muted-foreground">Arbitrum Sepolia</span>
+        <span className="text-sm font-medium text-muted-foreground">Sepolia Testnet</span>
         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
       </div>
 
@@ -17,12 +20,31 @@ export function Navbar() {
           <Bell className="w-5 h-5" />
         </button>
         <div className="h-6 w-px bg-border mx-2" />
-        <button className="flex items-center gap-2 bg-secondary/50 hover:bg-secondary border border-border px-4 py-1.5 rounded-full transition-all group">
-          <Wallet className="w-4 h-4 text-primary group-hover:scale-110 transition-transform" />
-          <span className="text-sm font-mono font-medium">0x7a...4e2d</span>
-        </button>
-        <button className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center border border-border overflow-hidden">
-          <User className="w-4 h-4 text-muted-foreground" />
+
+        {/* User Info */}
+        <div className="flex items-center gap-3">
+          {user?.photoURL ? (
+            <img
+              src={user.photoURL}
+              alt="avatar"
+              className="w-8 h-8 rounded-full border border-border"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-xs font-bold text-white">
+              {user?.email?.charAt(0).toUpperCase() || "?"}
+            </div>
+          )}
+          <span className="text-sm font-medium text-muted-foreground max-w-[150px] truncate hidden sm:block">
+            {user?.displayName || user?.email || "Anonymous"}
+          </span>
+        </div>
+
+        <button
+          onClick={signOut}
+          className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+          title="Sign out"
+        >
+          <LogOut className="w-4 h-4" />
         </button>
       </div>
     </div>
