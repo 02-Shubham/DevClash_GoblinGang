@@ -95,9 +95,6 @@ const agent = await agentRef.get();
 if (!agent.exists || agent.data().userId !== req.user.uid) {
   return res.status(403).json({ error: "Access denied: Not your agent" });
 }
-
-~~// [Planned] MongoDB Ownership Check~~
-~~// if (agent.userWallet !== req.user.wallet) { ... }~~
 ```
 
 ### Rules

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   title: "Intentional | Autonomous On-Chain Agents",
@@ -18,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
         <AuthProvider>
           {children}
         </AuthProvider>

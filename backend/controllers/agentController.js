@@ -7,37 +7,69 @@
 
 const { db } = require("../firebaseAdmin");
 const orchestratorService = require("../services/orchestratorService");
+const intentService = require("../services/intentService");
+const validationService = require("../services/validationService");
 
 /**
- * POST /agents/create
- * Creates a custom autonomous agent using natural language intent.
- * Uses the Orchestrator to parse and structure the intent.
- * Body: { intentText: string }
+ * POST /api/agent/create
+ * Creates a custom autonomous agent.
+ * Parses natural language, validates it, and stores it in Firebase.
+ * Body: { name, intent, wallet, permissions }
  */
 const createAgent = async (req, res) => {
-  const { uid, walletAddress } = req.user;
-  const { intentText } = req.body;
+  const { uid } = req.user;
+  const { name, intent, wallet, permissions } = req.body;
 
-  if (!intentText) {
-    return res.status(400).json({ error: "intentText is required" });
+  if (!intent) {
+    return res.status(400).json({ error: "intent is required" });
   }
 
   try {
-    // Ask the Orchestrator to parse the intent as a scheduled agent creation
-    const parsePrompt = `Parse this into a scheduled agent (do not execute immediately): "${intentText}". My userId is "${uid}".`;
-    const result = await orchestratorService.processChat(
-      parsePrompt,
-      uid,
-      walletAddress || "not connected"
-    );
+    // 1. Parse intent using Gemini
+    const parsedIntent = await intentService.parseIntent(intent);
+
+    // 2. Validate parsed intent
+    const validation = validationService.validateIntent(parsedIntent);
+    if (!validation.valid) {
+      return res.status(400).json({ 
+        success: false,
+        error: validation.error 
+      });
+    }
+
+    // 3. Apply permissions check
+    const maxSpend = permissions?.maxSpend || 0;
+    if (parsedIntent.action.amount > maxSpend && maxSpend > 0) {
+      return res.status(400).json({ 
+        success: false,
+        error: `Action amount (${parsedIntent.action.amount}) exceeds max spend limit (${maxSpend}).` 
+      });
+    }
+
+    // 4. Store in Firebase
+    const agentData = {
+      name: name || "Unnamed Agent",
+      userWallet: wallet || "Not provided",
+      userId: uid, // Keeping userId for filtering
+      intentText: intent,
+      parsedIntent,
+      permissions: permissions || { maxSpend: 0 },
+      status: "active",
+      createdAt: new Date().toISOString(),
+    };
+
+    const docRef = await db.collection("agents").add(agentData);
 
     return res.status(201).json({
-      message: result.response,
-      intent: intentText,
+      success: true,
+      agent: {
+        agentId: docRef.id,
+        ...agentData,
+      },
     });
   } catch (error) {
     console.error("createAgent error:", error);
-    res.status(500).json({ error: "Failed to create agent" });
+    res.status(500).json({ error: "Failed to create agent: " + error.message });
   }
 };
 

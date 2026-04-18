@@ -24,7 +24,7 @@ Direct user engagement layer. The current implementation uses Next.js 16 for ser
 
 #### 1.3 Dashboard
 - **Content:** Agent cards showing name, status, last execution, next check
-- **Real-time:** WebSocket subscription for live status updates
+- **Real-time:** Native Firebase snapshot listeners for live status updates
 - **Filters:** By status (active / paused / completed / failed)
 
 #### 1.4 Agent Detail View
@@ -122,9 +122,7 @@ Ambiguity Check
 ## Module 3: Agent Manager
 
 ### Responsibility
-Lifecycle management of agents. 
-- **[Implemented]:** Backed by **Firebase Firestore** for real-time dashboard sync.
-- ~~**[Planned]:** Support for **MongoDB** for high-performance archiving.~~
+Lifecycle management of agents. Backed by **Firebase Firestore** for real-time dashboard sync.
 
 ### Operations
 
@@ -254,16 +252,13 @@ Real-time agent monitoring, log aggregation, and user notifications.
 ### Features
 | Feature | Implementation |
 |---------|---------------|
-| Live status | WebSocket push on agent status change |
-| Execution logs | Stored in MongoDB, queryable by agent/wallet/time |
+| Live status | Firebase snapshot updates on agent change |
+| Execution logs | Stored in Firestore, queryable by user UID |
 | Health checks | Periodic heartbeat for execution engine |
-| Notifications | WebSocket events for: execution complete, agent paused, error |
+| Notifications | Real-time events for: execution complete, agent paused, error |
 
-### WebSocket Events
+### Real-time Event Shape
 ```javascript
-// Server → Client
-{ "type": "agent_status", "agentId": "...", "status": "active" }
-{ "type": "execution_complete", "agentId": "...", "txHash": "0x...", "success": true }
-{ "type": "execution_failed", "agentId": "...", "error": "Insufficient balance" }
-{ "type": "agent_paused", "agentId": "...", "reason": "user_action" }
+// Firestore snapshot update
+{ "agentId": "...", "status": "active", "lastExecutedAt": "..." }
 ```
