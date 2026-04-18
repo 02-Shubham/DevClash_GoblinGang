@@ -50,39 +50,41 @@ ChainPilot follows a **layered, event-driven architecture** with clear separatio
 
 ### Layer 1 — Presentation (Frontend)
 
-| Concern | Detail |
-|---------|--------|
-| Framework | React + Tailwind CSS |
-| Wallet | WalletConnect / MetaMask via `wagmi` + `viem` |
-| State | React Context + React Query for server state |
-| Real-time | WebSocket connection for live agent status updates |
+| Concern | [Implemented] | [Planned/Alternative] |
+|---------|---------------|------------------------|
+| Framework | Next.js 16 (App Router) | React + Vite |
+| Auth UI | Firebase Login (Oauth) | SIWE Dashboard |
+| Wallet | Native MetaMask Injection | WalletConnect via `wagmi` |
+| State | React Context | React Query |
+| Real-time | Firebase Snapshots | WebSockets (Socket.io) |
 
-**Pages:**
+**Implemented Pages (Next.js):**
 - `/` — Landing page
-- `/dashboard` — Agent list, status overview
-- `/agent/new` — Intent input + agent creation wizard
-- `/agent/:id` — Agent detail, logs, controls
-- `/logs` — Global execution log viewer
+- `/login` — Auth entry
+- `/dashboard` — Agent control & Chat
 
 ---
 
 ### Layer 2 — API Gateway (Express.js)
 
 Responsibilities:
-- **Authentication** — Verify wallet signature (SIWE — Sign-In with Ethereum)
-- **Authorization** — Ensure requests match the authenticated wallet
-- **Rate Limiting** — Protect AI endpoints from abuse
-- **Request Routing** — Delegate to appropriate service module
+- **Authentication:**
+    - **[Implemented]:** Firebase ID Token verification (`firebase-admin`).
+    - **[Planned]:** SIWE Signature verification.
+- **Authorization:** Scope checking against Firebase `uid` or wallet address.
+- **Routing:** Forwarding to Orchestrator or Manager.
 
-All API routes are prefixed with `/api/v1/`.
+Current endpoints are served from the root while transition to `/api/v1/` is planned.
 
 ---
 
 ### Layer 3 — Core Services
 
-#### 3a. Intent Engine (AI Layer)
+#### 3a. Intent Engine (Nexus Orchestrator)
 
-Converts natural language user input into a **structured agent configuration**.
+**[Implemented]:** The core logic is powered by the **Nexus Orchestrator**, a LangChain-based ReAct agent using Gemini 1.5 Flash. It:
+1.  **Parses Intent:** Directly from natural language.
+2.  **Tooling:** Can query balances or previous agents to contextually create new ones.
 
 ```
 User Input: "Buy 0.5 ETH if the price drops below $2000"

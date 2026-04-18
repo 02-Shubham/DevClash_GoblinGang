@@ -6,6 +6,34 @@ This folder contains all project documentation, organized by concern. Start here
 
 ---
 
+## 📁 Directory Structure (Current)
+
+```text
+DevClash_GoblinGang/
+├── Docs/                       # 📚 System Documentation
+│   ├── INDEX.md                # 📍 Navigation Hub
+│   ├── ...                     # Specialized documents
+│
+├── frontend/                   # 💻 Next.js 16 Application (App Router)
+│   ├── src/
+│   │   ├── app/                # Page routes and layouts
+│   │   ├── components/         # UI Elements
+│   │   ├── context/            # Global State (Auth, UI)
+│   │   └── lib/                # Firebase & Web3 Client
+│
+├── backend/                    # 🚀 Express.js API & Services
+│   ├── src/
+│   │   ├── routes/             # API Endpoints
+│   │   ├── controllers/        # Request Handlers
+│   │   └── services/           # Core Logic (Nexus, Execution)
+│   ├── workers/                # Background Execution Workers
+│   └── server.js               # Main Entry Point
+│
+└── README.md                   # 🏁 High-level overview
+```
+
+---
+
 ## 📁 Document Map
 
 | File | Purpose |

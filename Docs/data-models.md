@@ -1,18 +1,61 @@
 # 📦 Data Models
 
-## 1. Database: MongoDB
+## 1. Primary Database: [Implemented] Firebase Firestore
 
-MongoDB is chosen for:
-- Flexible schema for evolving agent configs
-- Native JSON storage matches our data shapes
-- Easy horizontal scaling
-- Free tier on Atlas for MVP
+Firestore is utilized for its:
+- **Real-time Sync:** Seamless integration with the dashboard via snapshots.
+- **Serverless Scaling:** Zero-config scaling and maintenance.
+- **Auth Integration:** Native integration with Firebase Auth UIDs.
+
+*Alternative Storage (Planned):* **MongoDB** remains a candidate for high-volume execution logs or specialized querying needs.
 
 ---
 
-## 2. Collections & Schemas
+## 2. Implemented: Firestore Collections
 
 ### 2.1 `users` Collection
+Stores profile and linked wallet association.
+
+```javascript
+{
+  uid: String,              // Firebase Auth UID
+  email: String,
+  walletAddress: String,    // Linked wallet 
+  createdAt: Timestamp,
+  lastLoginAt: Timestamp
+}
+```
+
+---
+
+### 2.2 `agents` Collection
+Primary agent configuration source.
+
+```javascript
+{
+  id: String,
+  userId: String,
+  name: String,
+  rawIntent: String,
+  config: {
+    triggerType: "price_threshold" | "time_based",
+    condition: "lt" | "gt",
+    asset: String,
+    threshold: Number,
+    action: "transfer" | "swap",
+    amount: String
+  },
+  status: "active" | "paused" | "deleted",
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+---
+
+## 3. Planned/Alternative: MongoDB Schemas
+
+### 3.1 `users` (Legacy/Planned)
 
 Stores authenticated wallet sessions.
 

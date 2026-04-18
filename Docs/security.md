@@ -32,7 +32,33 @@ All transaction signing happens client-side in the user's wallet (MetaMask, Wall
 
 ---
 
-## 2. Authentication — SIWE (Sign-In with Ethereum)
+## 2. Authentication — [Implemented] Firebase Auth (Oauth)
+
+### Flow
+1. **Providers:** User logs in via Google or GitHub (GitHub Oauth implemented) on the frontend.
+2. **ID Token:** Firebase issues a signed JSON Web Token (ID Token).
+3. **Verification:** Frontend sends the ID Token in the `Authorization: Bearer` header.
+4. **Backend:** Verified via `firebase-admin` to extract the unique `uid`.
+
+### Why Firebase?
+- **Speed:** Quickest path to secure Oauth sessions.
+- **Identity Linking:** Easy to link multiple providers to one account.
+- **Managed:** No need to handle session tokens or refresh logic manually.
+
+### ID Token Claims (Backend)
+```json
+{
+  "uid": "abc12345XYZ",
+  "email": "user@example.com",
+  "email_verified": true,
+  "iat": 1713440000,
+  "exp": 1713443600
+}
+```
+
+---
+
+## 3. Authentication — [Planned] SIWE (Sign-In with Ethereum)
 
 ### Flow
 1. Frontend requests a nonce from backend
@@ -43,7 +69,6 @@ All transaction signing happens client-side in the user's wallet (MetaMask, Wall
 ### Why SIWE?
 - No passwords, no email — wallet IS the identity
 - Cryptographically verifiable
-- Standard (EIP-4361)
 
 ### JWT Payload
 ```json
@@ -63,12 +88,16 @@ All transaction signing happens client-side in the user's wallet (MetaMask, Wall
 Every API request that targets a specific agent validates:
 
 ```javascript
-// Middleware: verifyOwnership
-const agent = await Agent.findById(req.params.id);
+// [Implemented] Firestore Ownership Check
+const agentRef = db.collection('agents').doc(req.params.id);
+const agent = await agentRef.get();
 
-if (agent.userWallet !== req.user.wallet) {
-  return res.status(403).json({ error: "Not your agent" });
+if (!agent.exists || agent.data().userId !== req.user.uid) {
+  return res.status(403).json({ error: "Access denied: Not your agent" });
 }
+
+// [Planned] MongoDB Ownership Check
+// if (agent.userWallet !== req.user.wallet) { ... }
 ```
 
 ### Rules
