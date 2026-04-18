@@ -14,7 +14,7 @@ Direct user engagement layer. The current implementation uses Next.js 16 for ser
 #### 1.1 Auth & Connection
 - **[Implemented]:** Firebase Auth with Google/GitHub providers.
 - **[Implemented]:** Native MetaMask connection via standard injection.
-- **[Planned]:** Full SIWE (Sign-In with Ethereum) with `wagmi`.
+- ~~**[Planned]:** Full SIWE (Sign-In with Ethereum) with `wagmi`.~~
 
 #### 1.2 Agent Builder
 - **Input:** Natural language text field + optional structured form
@@ -124,7 +124,7 @@ Ambiguity Check
 ### Responsibility
 Lifecycle management of agents. 
 - **[Implemented]:** Backed by **Firebase Firestore** for real-time dashboard sync.
-- **[Planned]:** Support for **MongoDB** for high-performance archiving.
+- ~~**[Planned]:** Support for **MongoDB** for high-performance archiving.~~
 
 ### Operations
 

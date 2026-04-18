@@ -17,12 +17,12 @@ Current [Implemented]:
 Frontend (Next.js) ──▶ Nexus Orchestrator (LangChain AI) ──▶ Execution Engine ──▶ Blockchain
                           (Backend / Firebase)
 
-Visionary [Planned]:
-Frontend (React) → API Gateway (Express) → Intent Engine (AI)
-                                        → Agent Manager (MongoDB)
-                                        → Execution Engine (Worker)
-                                        → Web3 Service (ethers.js)
-                                        → Blockchain (EVM / Sepolia)
+~~Visionary [Planned]:~~
+~~Frontend (React) → API Gateway (Express) → Intent Engine (AI)~~
+~~                                        → Agent Manager (MongoDB)~~
+~~                                        → Execution Engine (Worker)~~
+~~                                        → Web3 Service (ethers.js)~~
+~~                                        → Blockchain (EVM / Sepolia)~~
 ```
 
 ## 📚 Documentation
@@ -44,14 +44,14 @@ All detailed documentation lives in the [`Docs/`](./Docs/INDEX.md) folder:
 
 ## 🧱 Tech Stack
 
-| Layer | **Current [Implemented]** | Visionary [Planned/Alternative] |
+| Layer | **Current [Implemented]** | ~~Visionary [Planned/Alternative]~~ |
 |-------|--------------------------|-------------------------------|
-| **Frontend** | Next.js 16 + Tailwind v4 | React + Vite + Tailwind v3 |
-| **Backend** | Node.js + Firebase Admin | Node.js + Express |
-| **Auth** | Firebase Auth (Oauth) | SIWE (Sign-In with Ethereum) |
-| **Database** | Firebase Firestore | MongoDB Atlas |
-| **AI** | LangChain + Gemini 1.5 Flash | Google Gemini API (Direct) |
-| **Network** | Sepolia Testnet | L2 Support (Base, Arbitrum) |
+| **Frontend** | Next.js 16 + Tailwind v4 | ~~React + Vite + Tailwind v3~~ |
+| **Backend** | Node.js + Firebase Admin | ~~Node.js + Express~~ |
+| **Auth** | Firebase Auth (Oauth) | ~~SIWE (Sign-In with Ethereum)~~ |
+| **Database** | Firebase Firestore | ~~MongoDB Atlas~~ |
+| **AI** | LangChain + Gemini 1.5 Flash | ~~Google Gemini API (Direct)~~ |
+| **Network** | Sepolia Testnet | ~~L2 Support (Base, Arbitrum)~~ |
 
 ## 🚀 Quick Start
 

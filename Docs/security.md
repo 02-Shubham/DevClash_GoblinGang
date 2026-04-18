@@ -58,19 +58,19 @@ All transaction signing happens client-side in the user's wallet (MetaMask, Wall
 
 ---
 
-## 3. Authentication — [Planned] SIWE (Sign-In with Ethereum)
+## ~~3. Authentication — [Planned] SIWE (Sign-In with Ethereum)~~
 
-### Flow
-1. Frontend requests a nonce from backend
-2. User signs a structured message containing the nonce
-3. Backend verifies the signature against the claimed wallet address
-4. Backend issues a JWT (short-lived, 1h expiry) + refresh token (7d)
+### ~~Flow~~
+1. ~~Frontend requests a nonce from backend~~
+2. ~~User signs a structured message containing the nonce~~
+3. ~~Backend verifies the signature against the claimed wallet address~~
+4. ~~Backend issues a JWT (short-lived, 1h expiry) + refresh token (7d)~~
 
-### Why SIWE?
-- No passwords, no email — wallet IS the identity
-- Cryptographically verifiable
+### ~~Why SIWE?~~
+- ~~No passwords, no email — wallet IS the identity~~
+- ~~Cryptographically verifiable~~
 
-### JWT Payload
+### ~~JWT Payload~~
 ```json
 {
   "wallet": "0x1234...abcd",
@@ -96,8 +96,8 @@ if (!agent.exists || agent.data().userId !== req.user.uid) {
   return res.status(403).json({ error: "Access denied: Not your agent" });
 }
 
-// [Planned] MongoDB Ownership Check
-// if (agent.userWallet !== req.user.wallet) { ... }
+~~// [Planned] MongoDB Ownership Check~~
+~~// if (agent.userWallet !== req.user.wallet) { ... }~~
 ```
 
 ### Rules

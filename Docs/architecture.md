@@ -50,13 +50,13 @@ ChainPilot follows a **layered, event-driven architecture** with clear separatio
 
 ### Layer 1 — Presentation (Frontend)
 
-| Concern | [Implemented] | [Planned/Alternative] |
+| Concern | [Implemented] | ~~[Planned/Alternative]~~ |
 |---------|---------------|------------------------|
-| Framework | Next.js 16 (App Router) | React + Vite |
-| Auth UI | Firebase Login (Oauth) | SIWE Dashboard |
-| Wallet | Native MetaMask Injection | WalletConnect via `wagmi` |
-| State | React Context | React Query |
-| Real-time | Firebase Snapshots | WebSockets (Socket.io) |
+| Framework | Next.js 16 (App Router) | ~~React + Vite~~ |
+| Auth UI | Firebase Login (Oauth) | ~~SIWE Dashboard~~ |
+| Wallet | Native MetaMask Injection | ~~WalletConnect via `wagmi`~~ |
+| State | React Context | ~~React Query~~ |
+| Real-time | Firebase Snapshots | ~~WebSockets (Socket.io)~~ |
 
 **Implemented Pages (Next.js):**
 - `/` — Landing page
@@ -70,7 +70,7 @@ ChainPilot follows a **layered, event-driven architecture** with clear separatio
 Responsibilities:
 - **Authentication:**
     - **[Implemented]:** Firebase ID Token verification (`firebase-admin`).
-    - **[Planned]:** SIWE Signature verification.
+    - ~~**[Planned]:** SIWE Signature verification.~~
 - **Authorization:** Scope checking against Firebase `uid` or wallet address.
 - **Routing:** Forwarding to Orchestrator or Manager.
 

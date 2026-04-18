@@ -7,7 +7,7 @@ Firestore is utilized for its:
 - **Serverless Scaling:** Zero-config scaling and maintenance.
 - **Auth Integration:** Native integration with Firebase Auth UIDs.
 
-*Alternative Storage (Planned):* **MongoDB** remains a candidate for high-volume execution logs or specialized querying needs.
+*~~Alternative Storage (Planned):~~* ~~**MongoDB** remains a candidate for high-volume execution logs or specialized querying needs.~~
 
 ---
 
@@ -53,9 +53,9 @@ Primary agent configuration source.
 
 ---
 
-## 3. Planned/Alternative: MongoDB Schemas
+## ~~3. Planned/Alternative: MongoDB Schemas~~
 
-### 3.1 `users` (Legacy/Planned)
+### ~~3.1 `users` (Legacy/Planned)~~
 
 Stores authenticated wallet sessions.
 
