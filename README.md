@@ -12,12 +12,10 @@ ChainPilot is a modular infrastructure platform that lets users:
 
 ## 🏗️ Architecture
 
-```
-Frontend (React) → API Gateway (Express) → Intent Engine (AI)
-                                        → Agent Manager (MongoDB)
-                                        → Execution Engine (Worker)
-                                        → Web3 Service (ethers.js)
-                                        → Blockchain (EVM / Sepolia)
+```text
+Current [Implemented]:
+Frontend (Next.js) ──▶ Nexus Orchestrator (LangChain AI) ──▶ Execution Engine ──▶ Blockchain
+                          (Backend / Firebase)
 ```
 
 ## 📚 Documentation
@@ -39,11 +37,14 @@ All detailed documentation lives in the [`Docs/`](./Docs/INDEX.md) folder:
 
 ## 🧱 Tech Stack
 
-- **Frontend:** React + Vite + Tailwind CSS
-- **Backend:** Node.js + Express + MongoDB
-- **AI:** Google Gemini API
-- **Blockchain:** ethers.js + Sepolia Testnet
-- **Auth:** SIWE (Sign-In with Ethereum)
+| Layer | **Current [Implemented]** | Status / Planned |
+|-------|--------------------------|------------------|
+| **Frontend** | Next.js 16 + Tailwind v4 | Finalized |
+| **Backend** | Node.js + Firebase Admin | Finalized |
+| **Auth** | Firebase Auth (Oauth) | SIWE (Planned) |
+| **Database** | Firebase Firestore | Finalized |
+| **AI** | LangChain + Gemini 1.5 Flash | Finalized |
+| **Network** | Sepolia Testnet | L2 Support (Base, Arbitrum) |
 
 ## 🚀 Quick Start
 

@@ -5,15 +5,16 @@
 | Layer | Technology | Justification |
 |-------|-----------|---------------|
 | Frontend | Next.js 16 (App Router) | SEO-friendly, fast SSR, industry standard |
-| Styling | Tailwind CSS v4 | Rapid UI development, modernized utility-first styling |
+| Styling | Tailwind CSS v4 | Rapid UI development, modernized styling |
 | Wallet | wagmi + viem | Type-safe Ethereum interactions |
-| Auth | Firebase Auth (Implemented) / SIWE (Planned) | Multi-method login + Cryptographic identity |
-| Backend | Node.js 20 + Express | Lightweight, excellent async handling |
-| Database | Firebase Firestore (Implemented) / MongoDB (Alternative) | Real-time document store |
+| Auth | Firebase Auth (Oauth) | Primary auth method for user onboarding |
+| Backend | Node.js + Firebase Admin | Direct infrastructure management |
+| Database | Firebase Firestore | **Finalized** Real-time document store |
 | AI Core | LangChain.js + Gemini 1.5 Flash | Natural language → structured intent parsing |
 | Blockchain | ethers.js v6 | EVM interaction library |
-| Real-time | Firebase / Socket.io | Real-time updates and WebSocket support |
+| Real-time | Firebase Real-time Webhooks | Built-in snapshot listeners |
 | Validation | Zod | TypeScript-first schema validation |
+| API | Versioned (/api/v1) | **Planned** for stable production migration |
 | Testing | Jest + Supertest | Unit + integration testing |
 
 ---
@@ -72,8 +73,7 @@
 
 | Service | Purpose | Tier |
 |---------|---------|------|
-| **Firebase** | Auth & Firestore Database | Free (Spark) |
-| **MongoDB Atlas** | Alternative/Legacy DB | Free (M0) |
+| **Firebase** | Auth & Firestore Database (**Final**) | Free (Spark) |
 | **Infura / Alchemy** | Ethereum RPC node provider | Free tier |
 | **Google Gemini API** | AI Orchestrator (Nexus) | Free/Pay-as-you-go |
 | **CoinGecko API** | Price feeds | Free tier |
@@ -89,7 +89,6 @@
 |------|---------|
 | **VS Code** | Primary IDE |
 | **Postman / Thunder Client** | API testing |
-| **MongoDB Compass** | Database GUI |
 | **Hardhat** | Smart contract dev (future) |
 | **Git + GitHub** | Version control |
 | **ESLint + Prettier** | Code quality |

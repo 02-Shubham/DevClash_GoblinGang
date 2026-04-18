@@ -23,19 +23,23 @@ Ensures the authenticated user exists in the Firestore `users` collection. Autom
 }
 ```
 
-### `POST /auth/nonce` (Alternative)
-Get a nonce for SIWE message signing.
+---
 
-**Access:** Public
+## ~~Authentication (Legacy/Planned)~~
 
-**Request:**
+### ~~`POST /auth/nonce` (Alternative)~~
+~~Get a nonce for SIWE message signing.~~
+
+**~~Access:~~** ~~Public~~
+
+**~~Request:~~**
 ```json
 {
   "wallet": "0x1234...abcd"
 }
 ```
 
-**Response:**
+**~~Response:~~**
 ```json
 {
   "nonce": "a1b2c3d4e5f6"
@@ -44,12 +48,12 @@ Get a nonce for SIWE message signing.
 
 ---
 
-### `POST /auth/login`
-Verify SIWE signature and obtain JWT.
+### ~~`POST /auth/login`~~
+~~Verify SIWE signature and obtain JWT.~~
 
-**Access:** Public
+**~~Access:~~** ~~Public~~
 
-**Request:**
+**~~Request:~~**
 ```json
 {
   "message": "chainpilot.xyz wants you to sign in...",
@@ -57,7 +61,7 @@ Verify SIWE signature and obtain JWT.
 }
 ```
 
-**Response:**
+**~~Response:~~**
 ```json
 {
   "token": "eyJhbG...",
@@ -69,19 +73,19 @@ Verify SIWE signature and obtain JWT.
 
 ---
 
-### `POST /auth/refresh`
-Refresh an expired JWT.
+### ~~`POST /auth/refresh`~~
+~~Refresh an expired JWT.~~
 
-**Access:** Public (requires valid refresh token)
+**~~Access:~~** ~~Public (requires valid refresh token)~~
 
-**Request:**
+**~~Request:~~**
 ```json
 {
   "refreshToken": "eyJhbG..."
 }
 ```
 
-**Response:**
+**~~Response:~~**
 ```json
 {
   "token": "eyJhbG...(new)",
@@ -355,22 +359,6 @@ Submit a signed transaction.
   "status": "submitted"
 }
 ```
-
----
-
-## WebSocket Events
-
-Connect: `ws://host/ws?token=JWT`
-
-### Server → Client Events
-
-| Event | Payload |
-|-------|---------|
-| `agent_status` | `{ agentId, status, timestamp }` |
-| `execution_complete` | `{ agentId, logId, txHash, success, explanation }` |
-| `execution_failed` | `{ agentId, logId, error, errorCode }` |
-| `tx_pending` | `{ txId, agentId, description, expiresAt }` |
-| `tx_confirmed` | `{ txId, txHash, status }` |
 
 ---
 
