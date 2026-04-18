@@ -362,22 +362,6 @@ Submit a signed transaction.
 
 ---
 
-## ~~WebSocket Events (Legacy/Planned)~~
-
-~~Connect: `ws://host/ws?token=JWT`~~
-
-### ~~Server → Client Events~~
-
-| ~~Event~~ | ~~Payload~~ |
-|-------|---------|
-| ~~`agent_status`~~ | ~~`{ agentId, status, timestamp }`~~ |
-| ~~`execution_complete`~~ | ~~`{ agentId, logId, txHash, success, explanation }`~~ |
-| ~~`execution_failed`~~ | ~~`{ agentId, logId, error, errorCode }`~~ |
-| ~~`tx_pending`~~ | ~~`{ txId, agentId, description, expiresAt }`~~ |
-| ~~`tx_confirmed`~~ | ~~`{ txId, txHash, status }`~~ |
-
----
-
 ## Error Format
 
 All errors follow a consistent structure:
