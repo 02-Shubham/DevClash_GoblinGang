@@ -81,53 +81,48 @@ const OrbitingItem = ({ radius, duration, delay = 0, reverse = false, children, 
 
 export function OrbitingIcons() {
   return (
-    <div className="relative flex items-center justify-center w-full h-[600px] overflow-hidden">
-      {/* Background radial gradients for that blurred look - MUCH LIGHTER */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-400/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-sky-300/5 rounded-full blur-[80px] pointer-events-none" />
+    <div className="relative flex items-center justify-center w-full h-[900px] overflow-hidden">
+      {/* Background radial gradients for that blurred look - MUCH LIGHTER & LARGER */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-blue-400/5 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-sky-300/5 rounded-full blur-[100px] pointer-events-none" />
       
-      {/* Concentric Circles */}
-      <div className="absolute border border-dashed border-border/40 rounded-full w-[250px] h-[250px]" />
-      <div className="absolute border border-dashed border-border/30 rounded-full w-[450px] h-[450px]" />
-      <div className="absolute border border-dashed border-border/20 rounded-full w-[650px] h-[650px]" />
+      {/* Concentric Circles - SCALED UP */}
+      <div className="absolute border border-dashed border-border/40 rounded-full w-[360px] h-[360px]" />
+      <div className="absolute border border-dashed border-border/30 rounded-full w-[700px] h-[700px]" />
+      <div className="absolute border border-dashed border-border/20 rounded-full w-[1040px] h-[1040px]" />
 
-      {/* Centerpiece */}
-      {/* <div className="z-10 bg-background border border-border p-6 rounded-3xl shadow-2xl flex items-center justify-center">
-        <Bot className="w-12 h-12 text-primary" />
-      </div> */}
-
-      {/* Orbiting Icons */}
+      {/* Orbiting Icons - SCALED RADII */}
       {/* Inner Tier */}
-      <OrbitingItem radius={125} duration={15}>
-        <GithubIcon className="w-5 h-5 text-[#24292f]" />
+      <OrbitingItem radius={180} duration={20}>
+        <GithubIcon className="w-6 h-6 text-[#24292f]" />
       </OrbitingItem>
-      <OrbitingItem radius={125} duration={15} delay={7.5}>
-        <SlackIcon className="w-5 h-5 text-[#4a154b]" />
+      <OrbitingItem radius={180} duration={20} delay={10}>
+        <SlackIcon className="w-6 h-6 text-[#4a154b]" />
       </OrbitingItem>
 
       {/* Middle Tier */}
-      <OrbitingItem radius={225} duration={25} reverse>
-        <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold">H</div>
+      <OrbitingItem radius={350} duration={35} reverse>
+        <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-[12px] font-bold">H</div>
       </OrbitingItem>
-      <OrbitingItem radius={225} duration={25} delay={8.3} reverse>
-        <Globe className="w-5 h-5 text-blue-500" />
+      <OrbitingItem radius={350} duration={35} delay={11.6} reverse>
+        <Globe className="w-6 h-6 text-blue-500" />
       </OrbitingItem>
-      <OrbitingItem radius={225} duration={25} delay={16.6} reverse>
-        <Zap className="w-5 h-5 text-yellow-500" />
+      <OrbitingItem radius={350} duration={35} delay={23.3} reverse>
+        <Zap className="w-6 h-6 text-yellow-500" />
       </OrbitingItem>
 
       {/* Outer Tier */}
-      <OrbitingItem radius={325} duration={40}>
-        <Database className="w-6 h-6 text-slate-600" />
+      <OrbitingItem radius={520} duration={60}>
+        <Database className="w-7 h-7 text-slate-600" />
       </OrbitingItem>
-      <OrbitingItem radius={325} duration={40} delay={10}>
-        <div className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">f</div>
+      <OrbitingItem radius={520} duration={60} delay={15}>
+        <div className="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">f</div>
       </OrbitingItem>
-      <OrbitingItem radius={325} duration={40} delay={20}>
-        <Cpu className="w-6 h-6 text-purple-500" />
+      <OrbitingItem radius={520} duration={60} delay={30}>
+        <Cpu className="w-7 h-7 text-purple-500" />
       </OrbitingItem>
-      <OrbitingItem radius={325} duration={40} delay={30}>
-        <MessageSquare className="w-6 h-6 text-green-500" />
+      <OrbitingItem radius={520} duration={60} delay={45}>
+        <MessageSquare className="w-7 h-7 text-green-500" />
       </OrbitingItem>
     </div>
   );

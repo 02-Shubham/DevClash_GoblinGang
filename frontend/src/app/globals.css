@@ -20,6 +20,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --font-sans: var(--font-manrope);
 }
 
 :root {

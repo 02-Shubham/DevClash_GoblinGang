@@ -35,16 +35,16 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-4 pb-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-8 relative">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        <div className="max-w-7xl mx-auto px-8 w-full relative">
           
           {/* Background Illustration */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[45%] w-full max-w-[1200px] opacity-100 pointer-events-none">
+          <div className="absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1600px] opacity-100 pointer-events-none">
             <OrbitingIcons />
           </div>
 
           {/* Hero Content */}
-          <div className="relative text-center space-y-8 max-w-4xl mx-auto pt-20">
+          <div className="relative  text-center space-y-8 max-w-4xl mx-auto py-20">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary border border-border text-muted-foreground text-[10px] font-bold uppercase tracking-[0.2em]">
               AI Agent Marketplace
             </div>
