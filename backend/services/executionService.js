@@ -86,18 +86,29 @@ const triggerExecution = async (agent, agentId) => {
 
   try {
     const action = agent.rule.action;
+    if (!action || !action.type || !action.params) {
+      throw new Error("Invalid agent action configuration");
+    }
 
     if (action.type === "transfer") {
+      if (!action.params.toAddress || !action.params.amount) {
+        throw new Error("Transfer action requires toAddress and amount");
+      }
       txData = await web3Service.prepareTransfer(
         action.params.toAddress,
         action.params.amount
       );
     } else if (action.type === "swap") {
+      if (!action.params.fromToken || !action.params.toToken || !action.params.amount) {
+        throw new Error("Swap action requires fromToken, toToken, and amount");
+      }
       txData = await web3Service.prepareSwap(
         action.params.fromToken,
         action.params.toToken,
         action.params.amount
       );
+    } else {
+      throw new Error(`Unsupported action type: ${action.type}`);
     }
 
     // Log the pending execution to Firestore
@@ -119,6 +130,21 @@ const triggerExecution = async (agent, agentId) => {
     console.log(`🚀 Triggered agent [${agentId}] for user [${agent.userId}]`);
   } catch (error) {
     console.error(`❌ Failed to trigger agent [${agentId}]:`, error.message);
+    const message = String(error?.message || "");
+    const isConfigError =
+      message.includes("requires") ||
+      message.includes("Invalid agent action configuration") ||
+      message.includes("Unsupported action type");
+
+    // Prevent log spam: pause agents that have invalid static config.
+    if (isConfigError) {
+      await db.collection("agents").doc(agentId).update({
+        status: "paused",
+        lastError: message,
+        updatedAt: new Date().toISOString(),
+      });
+      console.warn(`⏸️ Paused misconfigured agent [${agentId}] to prevent repeated failures.`);
+    }
   }
 };
 
@@ -150,8 +176,9 @@ const runExecutionCycle = async () => {
       const agent = doc.data();
       const agentId = doc.id;
       const trigger = agent.rule?.trigger;
+      const action = agent.rule?.action;
 
-      if (!trigger) return;
+      if (!trigger || !action) return;
 
       let conditionMet = false;
 

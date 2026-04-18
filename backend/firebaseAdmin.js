@@ -12,24 +12,23 @@ const path = require("path");
 // Initialize only once (guard against hot-reload re-initialization)
 if (!admin.apps.length) {
   let credential;
-
   if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
-    // Option 1: Use a service account JSON file
-    const serviceAccount = require(
-      path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
-    );
+    const serviceAccount = require(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_PATH));
     credential = admin.credential.cert(serviceAccount);
+    console.log(`📡 Using Service Account for Project: ${serviceAccount.project_id}`);
   } else {
-    // Option 2: Use individual environment variables
     credential = admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // The private key comes with escaped newlines from env vars
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
     });
+    console.log(`📡 Using Env Vars for Project: ${process.env.FIREBASE_PROJECT_ID}`);
   }
 
-  admin.initializeApp({ credential });
+  admin.initializeApp({ 
+    credential,
+    projectId: process.env.FIREBASE_PROJECT_ID || (process.env.FIREBASE_SERVICE_ACCOUNT_PATH ? require(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_PATH)).project_id : undefined)
+  });
   console.log("✅ Firebase Admin initialized");
 }
 
