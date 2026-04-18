@@ -24,7 +24,7 @@ export function WalletButton() {
     error,
     connect,
     disconnect,
-    switchToSepolia,
+    switchToHardhat,
   } = useWallet();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -69,11 +69,11 @@ export function WalletButton() {
   if (!isCorrectNetwork) {
     return (
       <button
-        onClick={switchToSepolia}
+        onClick={switchToHardhat}
         className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 transition-all"
       >
         <AlertTriangle className="w-4 h-4" />
-        Switch to Sepolia
+        Switch to Hardhat Local
       </button>
     );
   }
@@ -116,7 +116,7 @@ export function WalletButton() {
               </div>
               <p className="font-mono text-sm font-medium text-primary truncate">{address}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {balance} ETH · Sepolia Testnet
+                {balance} ETH · Hardhat Local
               </p>
             </div>
 
@@ -133,16 +133,6 @@ export function WalletButton() {
                 )}
                 {copied ? "Copied!" : "Copy Address"}
               </button>
-              <a
-                href={`https://sepolia.etherscan.io/address/${address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 w-full px-4 py-2.5 text-sm rounded-xl hover:bg-secondary transition-colors"
-                onClick={() => setDropdownOpen(false)}
-              >
-                <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                View on Etherscan
-              </a>
               <div className="border-t border-border my-2" />
               <button
                 onClick={() => {

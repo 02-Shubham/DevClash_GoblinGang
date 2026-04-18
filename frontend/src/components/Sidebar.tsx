@@ -62,15 +62,6 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
 
-      <div className="p-6 border-t border-border">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500" />
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-medium truncate">0x7a...4e2d</span>
-            <span className="text-[10px] text-muted-foreground font-mono">Sepolia Testnet</span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

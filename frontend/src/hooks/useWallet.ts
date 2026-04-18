@@ -25,8 +25,8 @@ export interface WalletState {
   error: string | null;
 }
 
-const SEPOLIA_CHAIN_ID = 11155111;
-const SEPOLIA_HEX = "0xaa36a7";
+const TARGET_CHAIN_ID = 1337;
+const TARGET_HEX = "0x539";
 
 export function useWallet() {
   const [state, setState] = useState<WalletState>({
@@ -43,9 +43,23 @@ export function useWallet() {
   // Internal helpers
   // ----------------------------------------------------------------
 
-  const getProvider = (): BrowserProvider | null => {
+  const getMetaMaskProvider = (): any => {
     if (typeof window === "undefined" || !window.ethereum) return null;
-    return new ethers.BrowserProvider(window.ethereum);
+    
+    // Handle EIP-1193 providers array (Multiple extensions)
+    const ethAny = window.ethereum as any;
+    if (ethAny.providers?.length) {
+      const mm = ethAny.providers.find((p: any) => p.isMetaMask && !p.isPhantom);
+      if (mm) return mm;
+    }
+    
+    return window.ethereum;
+  };
+
+  const getProvider = (): BrowserProvider | null => {
+    const provider = getMetaMaskProvider();
+    if (!provider) return null;
+    return new ethers.BrowserProvider(provider);
   };
 
   const refreshBalance = useCallback(async (address: string) => {
@@ -81,7 +95,7 @@ export function useWallet() {
         chainId,
         isConnected: true,
         isConnecting: false,
-        isCorrectNetwork: chainId === SEPOLIA_CHAIN_ID,
+        isCorrectNetwork: chainId === TARGET_CHAIN_ID,
         error: null,
       });
     } catch (err: any) {
@@ -95,7 +109,8 @@ export function useWallet() {
   useEffect(() => {
     syncState();
 
-    if (!window.ethereum) return;
+    const extProvider = getMetaMaskProvider();
+    if (!extProvider) return;
 
     const handleAccountsChanged = (accounts: string[]) => {
       if (accounts.length === 0) {
@@ -115,12 +130,12 @@ export function useWallet() {
       syncState();
     };
 
-    window.ethereum.on("accountsChanged", handleAccountsChanged as (...args: unknown[]) => void);
-    window.ethereum.on("chainChanged", handleChainChanged);
+    extProvider.on("accountsChanged", handleAccountsChanged as (...args: unknown[]) => void);
+    extProvider.on("chainChanged", handleChainChanged);
 
     return () => {
-      window.ethereum?.removeListener("accountsChanged", handleAccountsChanged as (...args: unknown[]) => void);
-      window.ethereum?.removeListener("chainChanged", handleChainChanged);
+      extProvider.removeListener("accountsChanged", handleAccountsChanged as (...args: unknown[]) => void);
+      extProvider.removeListener("chainChanged", handleChainChanged);
     };
   }, [syncState]);
 
@@ -129,7 +144,8 @@ export function useWallet() {
   // ----------------------------------------------------------------
 
   const connect = useCallback(async () => {
-    if (!window.ethereum) {
+    const extProvider = getMetaMaskProvider();
+    if (!extProvider) {
       setState((prev) => ({
         ...prev,
         error: "MetaMask not found. Please install it from metamask.io",
@@ -140,7 +156,7 @@ export function useWallet() {
     setState((prev) => ({ ...prev, isConnecting: true, error: null }));
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(extProvider);
       // Request accounts — triggers MetaMask popup
       await provider.send("eth_requestAccounts", []);
       await syncState();
@@ -169,27 +185,28 @@ export function useWallet() {
   }, []);
 
   /**
-   * Asks MetaMask to switch to Sepolia. If not added, adds it automatically.
+   * Asks MetaMask to switch to Hardhat. If not added, adds it automatically.
    */
-  const switchToSepolia = useCallback(async () => {
-    if (!window.ethereum) return;
+  const switchToHardhat = useCallback(async () => {
+    const extProvider = getMetaMaskProvider();
+    if (!extProvider) return;
     try {
-      await window.ethereum.request({
+      await extProvider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: SEPOLIA_HEX }],
+        params: [{ chainId: TARGET_HEX }],
       });
     } catch (err: any) {
       // 4902 = chain not added to MetaMask
       if (err.code === 4902) {
-        await window.ethereum.request({
+        await extProvider.request({
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: SEPOLIA_HEX,
-              chainName: "Sepolia Testnet",
-              nativeCurrency: { name: "SepoliaETH", symbol: "ETH", decimals: 18 },
-              rpcUrls: ["https://rpc.sepolia.org"],
-              blockExplorerUrls: ["https://sepolia.etherscan.io"],
+              chainId: TARGET_HEX,
+              chainName: "Hardhat Local",
+              nativeCurrency: { name: "HardhatETH", symbol: "ETH", decimals: 18 },
+              rpcUrls: ["http://127.0.0.1:8545"],
+              blockExplorerUrls: [],
             },
           ],
         });
@@ -232,7 +249,7 @@ export function useWallet() {
     shortAddress,
     connect,
     disconnect,
-    switchToSepolia,
+    switchToHardhat,
     getSigner,
     sendTransaction,
     refreshBalance,
