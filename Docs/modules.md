@@ -4,17 +4,17 @@ Each module is a self-contained service with defined inputs, outputs, and respon
 
 ---
 
-## Module 1: Frontend (React)
+## Module 1: Frontend — [Implemented] Next.js 16 (App Router)
 
 ### Responsibility
-User-facing interface for agent management, monitoring, and control.
+Direct user engagement layer. The current implementation uses Next.js 16 for server-side stability and Tailwind CSS v4 for styling.
 
 ### Sub-Components
 
-#### 1.1 Wallet Connector
-- **Library:** `wagmi` + `viem` + WalletConnect
-- **Auth flow:** SIWE (Sign-In with Ethereum)
-- **Stores:** Connected wallet address, chain ID, connection status
+#### 1.1 Auth & Connection
+- **[Implemented]:** Firebase Auth with Google/GitHub providers.
+- **[Implemented]:** Native MetaMask connection via standard injection.
+- ~~**[Planned]:** Full SIWE (Sign-In with Ethereum) with `wagmi`.~~
 
 #### 1.2 Agent Builder
 - **Input:** Natural language text field + optional structured form
@@ -40,10 +40,10 @@ User-facing interface for agent management, monitoring, and control.
 
 ---
 
-## Module 2: Intent Engine (AI Layer)
+## Module 2: Intent Engine — [Implemented] Nexus Orchestrator
 
 ### Responsibility
-Parse natural language intents into structured, validated agent configurations.
+The "brain" of ChainPilot. The current implementation uses the **Nexus Orchestrator**, a LangChain-powered ReAct agent that decodes intent and uses tools to act on the system.
 
 ### Input
 ```json
@@ -122,7 +122,9 @@ Ambiguity Check
 ## Module 3: Agent Manager
 
 ### Responsibility
-CRUD operations for agents. Source of truth for agent state.
+Lifecycle management of agents. 
+- **[Implemented]:** Backed by **Firebase Firestore** for real-time dashboard sync.
+- ~~**[Planned]:** Support for **MongoDB** for high-performance archiving.~~
 
 ### Operations
 
