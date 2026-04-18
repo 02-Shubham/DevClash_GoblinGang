@@ -41,10 +41,10 @@ app.use(express.json());
 // ----------------------------------------------------------------
 // Routes
 // ----------------------------------------------------------------
-app.use("/auth", authRoutes);
-app.use("/chat", chatRoutes);
-app.use("/agents", agentRoutes);
-app.use("/logs", logRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/agent", agentRoutes);
+app.use("/api/logs", logRoutes);
 
 // Health Check
 app.get("/health", (req, res) => {
