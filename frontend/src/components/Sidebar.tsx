@@ -47,9 +47,9 @@ export function Sidebar({ className }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="mt-auto p-6">
-        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-3">Your Agents</div>
-        <div className="space-y-2">
+      <div className="mt-auto p-6 overflow-hidden flex flex-col min-h-0">
+        <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-3 shrink-0">Your Agents</div>
+        <div className="space-y-2 overflow-y-auto min-h-0 scrollbar-none">
           {agents.map((agent) => (
             <div key={agent.name} className="flex items-center justify-between px-3 py-2 text-sm rounded-lg hover:bg-secondary/50 transition-all cursor-pointer group">
               <div className="flex items-center gap-2">

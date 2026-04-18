@@ -29,7 +29,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex bg-background min-h-screen text-foreground overflow-hidden">
+    <div className="flex bg-background h-screen text-foreground overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
 
